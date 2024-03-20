@@ -1,0 +1,46 @@
+import threading
+import time
+import asyncio
+
+def print_world():
+    time.sleep(1)
+    print("World")
+
+def print_hello():
+    time.sleep(2)
+    print("Hello,")
+
+async def delayed_function_1():
+    await asyncio.sleep(1)
+    return 10
+
+async def delayed_function_2():
+    await asyncio.sleep(2)
+    return 20
+
+async def main():
+    start_time = time.time()
+    result_1 = await delayed_function_1()
+    result_2 = await delayed_function_2()
+    total_sum = result_1 + result_2
+    end_time = time.time()
+    print("Sequential Execution:")
+    print("Sum:", total_sum)
+    print("Time taken:", end_time - start_time, "seconds")
+
+    start_time_async = time.time()
+    tasks = [delayed_function_1(), delayed_function_2()]
+    results = await asyncio.gather(*tasks)
+    total_sum_async = sum(results)
+    end_time_async = time.time()
+    print("\nAsynchronous Execution:")
+    print("Sum:", total_sum_async)
+    print("Time taken:", end_time_async - start_time_async, "seconds")
+    print("\nI'm sleeping")
+    for i in range(3):
+        print(f"I'm sleeping {i} ...", end=' ')
+        time.sleep(1)
+    print("\nmain: I'm tired of waiting! I'm running finally")
+    print("main: Now I can quit.")
+
+asyncio.run(main())
